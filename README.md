@@ -1,63 +1,89 @@
 # ML Techniques
 
-Practical, reproducible machine-learning case studies implemented in Jupyter notebooks. Each notebook focuses on one algorithm, explains the modeling decisions, and includes evaluation metrics and visual diagnostics.
+An educational machine-learning project containing five Jupyter notebooks. Each notebook studies one dataset and one main algorithm from data cleaning through model evaluation.
 
-> **Learning project:** These notebooks are educational baselines, not production systems or professional advice.
+> **Important:** These are learning-focused baselines, not production systems. Reported results depend on the downloaded dataset, preprocessing decisions, feature selection, and train/test split.
 
-## Notebook guide
+## Project overview
 
-| Notebook | Technique | Prediction task |
+| Notebook | Algorithm | Task |
 | --- | --- | --- |
-| [01 · House Rent Regression](notebooks/01_house_rent_regression.ipynb) | OLS and Ridge Regression | Predict monthly house rent |
+| [01 · House Rent Regression](notebooks/01_house_rent_regression.ipynb) | Linear and Ridge Regression | Predict monthly house rent |
 | [02 · Phishing URL Classification](notebooks/02_phishing_url_classification.ipynb) | Logistic Regression | Classify URLs as legitimate or phishing |
-| [03 · Insurance Fraud Detection](notebooks/03_insurance_fraud_decision_tree.ipynb) | CART Decision Tree | Identify potentially fraudulent claims |
+| [03 · Insurance Fraud Detection](notebooks/03_insurance_fraud_decision_tree.ipynb) | Entropy-based Decision Tree | Identify potentially fraudulent claims |
 | [04 · Water Potability](notebooks/04_water_potability_knn.ipynb) | K-Nearest Neighbors | Classify water as potable or non-potable |
-| [05 · Sleep Health Classification](notebooks/05_sleep_health_svm.ipynb) | RBF-kernel Support Vector Machine | Predict sleep-disorder categories |
+| [05 · Sleep Health Classification](notebooks/05_sleep_health_svm.ipynb) | RBF-kernel SVM | Predict sleep-disorder categories |
 
-## What each notebook demonstrates
+## What is inside each notebook?
 
-### 01 · House rent regression
+The notebooks follow a common student-friendly structure:
 
-An interpretable linear baseline for monthly rent prediction, with one-hot encoding, log-target modeling, Ridge regularization, cross-validation, and metrics reported on both log and original-rent scales.
+1. Research question and simple algorithm definitions
+2. Dataset source, purpose, and column descriptions
+3. Data cleaning and preprocessing
+4. Exploratory data analysis and visualizations
+5. Feature selection and justification
+6. Model training, splitting strategy, and evaluation
+7. Confusion-matrix or regression metrics
+8. Model-specific visual diagnostics
+9. **Compare**
+10. **Summarize**
+11. **Conclude**, including limitations and possible improvements
 
-### 02 · Phishing URL classification
+Each major stage includes numbered `INSIGHT` explanations describing what the output means and why the next decision was made.
 
-An interpretable Logistic Regression workflow using URL features and registered-domain group validation. Group-based splitting helps prevent closely related URLs from appearing in both the training and test sets.
+## Notebook highlights
 
-### 03 · Insurance fraud detection
+### House rent regression
 
-An intentionally shallow CART Decision Tree for vehicle-insurance claim fraud. Class weighting, classification metrics, a confusion matrix, and the learned tree make the baseline easy to inspect.
+Uses linear and Ridge regression with categorical encoding, log-target modeling, cross-validation, residual diagnostics, actual-versus-predicted plots, and regression metrics such as MAE, RMSE, and \(R^2\). A clearly labeled high-rent threshold analysis is included only as an auxiliary confusion-matrix example; rent prediction itself is a regression problem.
 
-### 04 · Water potability
+### Phishing URL classification
 
-A KNN workflow that demonstrates why missing-value imputation and feature scaling must be fitted on training data before distance-based modeling. The notebook also visualizes the effect of different values of `k`.
+Uses numeric URL and domain features with Logistic Regression. The `Domain` column is used as a grouping key rather than as a predictor, preventing URLs from the same domain from appearing in both partitions. The notebook includes:
 
-### 05 · Sleep health classification
+- proxy-feature auditing;
+- grouped five-fold cross-validation;
+- unseen-domain testing;
+- 15%, 20%, 25%, and 30% grouped test-size comparisons;
+- five random seeds for each test size;
+- sigmoid, probability, ROC, precision-recall, confusion-matrix, coefficient, and split-sensitivity plots.
 
-An RBF-kernel SVM for multiclass sleep-disorder classification. The workflow includes standardized features, a stratified split, per-class metrics, and visual diagnostics.
+### Insurance fraud detection
+
+Uses an intentionally shallow entropy-based Decision Tree. The notebook explains entropy and information gain, uses class balancing, and visualizes the confusion matrix, ROC curve, feature importance, and learned tree.
+
+### Water potability
+
+Uses Euclidean-distance KNN with median imputation, standardization, uniform voting, and training-only cross-validation to choose `k`. The notebook demonstrates why scaling is essential for a distance-based algorithm and includes KNN performance visualizations.
+
+### Sleep health classification
+
+Uses an RBF-kernel SVM for multiclass sleep-disorder prediction. The notebook explains margins, support vectors, kernels, `C`, and `gamma`, and includes per-class metrics, multiclass ROC analysis, support-vector diagnostics, and split-sensitivity analysis.
 
 ## Running the notebooks
 
-### Option 1: Google Colab
+### Google Colab
 
-Open any notebook and select **Open in Colab**, or use the notebook links above after opening the file on GitHub.
+Open a notebook on GitHub and select **Open in Colab**, or open the notebook link directly in Colab.
 
-### Option 2: Local Jupyter
+### Local Jupyter
 
 ```bash
 git clone https://github.com/rupikap009/ML-Techniques.git
 cd ML-Techniques
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install jupyter numpy pandas scikit-learn matplotlib seaborn
+python -m pip install --upgrade pip
+pip install jupyter numpy pandas scikit-learn matplotlib seaborn scipy
 jupyter notebook
 ```
 
-Open the notebook you want to run and execute the cells from top to bottom. A clean Python 3 environment or Google Colab runtime is recommended.
+Open a notebook and run its cells from top to bottom. Python 3.10+ and a clean virtual environment are recommended.
 
-## Datasets and reproducibility
+## Datasets
 
-Datasets are intentionally not committed to this repository. This keeps the project lightweight and avoids redistributing downloaded copies. Each notebook documents its source and loading logic.
+Dataset files are intentionally not committed. Download the source dataset and place the required file where the notebook's loading cell expects it. Each notebook documents its filename, source, schema, and fallback behavior.
 
 | Notebook | Dataset source |
 | --- | --- |
@@ -67,16 +93,23 @@ Datasets are intentionally not committed to this repository. This keeps the proj
 | Water potability | [Water Potability Dataset](https://www.kaggle.com/datasets/adityakadiwal/water-potability) |
 | Sleep health | [Sleep Health and Lifestyle Dataset](https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset) |
 
-When reporting results, record the dataset version, access date, preprocessing choices, and whether the notebook used the original dataset or its clearly labeled synthetic demonstration fallback.
+For reproducible reporting, record the dataset version, download date, source, preprocessing choices, selected features, split settings, and whether the original data or a clearly labeled demonstration fallback was used.
 
-## Evaluation notes and limitations
+## How to interpret the results
 
-- Results from synthetic fallback data are illustrative only and must not be reported as results on the real datasets.
-- The phishing notebook uses domain-group validation, but this does not guarantee zero-day or production performance.
-- The insurance notebook is an educational shallow-tree baseline; stricter leakage-safe preprocessing and time-aware validation would strengthen the study.
-- The water-potability notebook currently uses the held-out test partition when exploring `k`; training-fold cross-validation should be used for an unbiased final estimate.
-- The sleep-health notebook uses fixed RBF SVM settings; tuning and repeated validation would be needed for stronger conclusions.
-- All results depend on the source data, sampling process, feature choices, and assumptions documented in the relevant notebook.
+- **Classification:** accuracy, balanced accuracy, precision, recall/sensitivity, specificity, F1, ROC-AUC, PR-AUC, and the confusion matrix are used where appropriate.
+- **Regression:** MAE, MSE, RMSE, \(R^2\), residual plots, and actual-versus-predicted plots are used.
+- **Generalization:** training scores are compared with held-out scores and cross-validation results. A score above 90% is not automatically overfitting; the train/test gap, validation design, leakage checks, and split stability matter.
+- **Data leakage:** preprocessing statistics are fitted within training data or pipelines. The phishing notebook additionally checks that grouped domains do not overlap.
+- **Visualizations:** plots are included to explain distributions, relationships, model behavior, errors, and validation stability—not simply to repeat the same metric.
+
+## Limitations
+
+- Dataset results may not represent real-world performance or future data.
+- The phishing grouped split is stronger than a random row split, but it is not temporal validation and does not guarantee zero-day performance.
+- The insurance, water, and sleep notebooks are educational baselines; deployment would require broader validation, monitoring, and domain expertise.
+- Dataset sampling, class definitions, missing-value assumptions, feature choices, and threshold choices affect the results.
+- Synthetic or demonstration fallback data must not be presented as performance on the original dataset.
 
 ## Repository structure
 
@@ -93,4 +126,4 @@ ML-Techniques/
 
 ## License
 
-No license has been specified yet. Dataset licenses and terms remain the responsibility of the respective dataset providers.
+No repository license has been specified. Dataset licenses and usage terms remain the responsibility of the respective dataset providers.
